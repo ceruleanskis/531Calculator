@@ -14,3 +14,9 @@ export enum CalcMethod {
     PERCENTAGE = 'percent',
 }
 
+export enum Lift {
+    BENCH_PRESS = 'bp',
+    SQUAT = 'squat',
+    OVERHEAD_PRESS = 'ohp',
+    DEADLIFT = 'dl'
+}
