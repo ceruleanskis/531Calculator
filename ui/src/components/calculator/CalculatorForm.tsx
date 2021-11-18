@@ -4,6 +4,9 @@ import {Container, Row} from 'react-bootstrap';
 import RadioButtonToggleGroups from 'components/calculator/RadioButtonToggleGroups';
 import {Bar, CalcMethod, Lift} from 'shared/Constants';
 import WeightInput from 'components/calculator/WeightInput';
+import WarmupModal from 'components/calculator/WarmupModal';
+import ApiService from 'services/ApiService';
+import {AssertionError} from 'assert';
 
 /**
  * A hook that contains the form inputs and logic for the calculator.
@@ -22,7 +25,13 @@ function CalculatorForm() {
         'dl': 'Deadlift'
     }
 
+    const [warmupLoadingShow, setWarmupLoadingShow] = React.useState(false);
+    const [warmupModalShow, setWarmupModalShow] = React.useState(false);
+    const [warmupData, setWarmupData] = React.useState([]);
+    const [warmupModalColor, setWarmupModalColor] = React.useState('primary');
+    const [warmupModalLift, setWarmupModalLift] = React.useState(Lift.OVERHEAD_PRESS as string);
 
+    const apiService = new ApiService();
     /**
      * Sets the initial state of the form.
      * @returns {any}
@@ -43,6 +52,20 @@ function CalculatorForm() {
         initialState
     );
     const radioButtonToggleGroups = new RadioButtonToggleGroups(onChange);
+
+    /**
+     * Given an id attribute, determine which lift it belongs to.
+     * @param {string} id
+     * @returns {Lift}
+     */
+    function getLiftFromId(id: string): Lift {
+        for (let lift of lifts) {
+            if (id.includes(lift)) {
+                return lift;
+            }
+        }
+        throw AssertionError;
+    }
 
     /**
      * Returns the Bootstrap color associated with the given Lift.
@@ -68,6 +91,36 @@ function CalculatorForm() {
         return color
     }
 
+    /**
+     * Event handler for the warmup button click.
+     * Calls the backend to retrieve warmup values and displays a WarmupModal with the retrieved values.
+     * @param {React.MouseEvent<HTMLButtonElement>} event
+     * @returns {Promise<void>}
+     */
+    const onWarmupButtonClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
+        setWarmupLoadingShow(true);
+        event.preventDefault();
+
+        // Get the input associated with the warmup button so the value, lift, and color can be defined.
+        const target = event.target as HTMLInputElement
+        const associatedInputId = (target.id).replace('icon-warmup-', '')
+            .replace('warmup-', '')
+        const associatedInput = document.querySelector(`#${associatedInputId}`) as HTMLInputElement
+        const value = Number(associatedInput.value);
+        const lift: Lift = getLiftFromId(associatedInputId);
+        const liftTitle: string = liftFullNames[lift] as string;
+        const color = getLiftColor(lift);
+
+        apiService.getWarmup(value, values.barType).then((response) => {
+                setWarmupData(response.message);
+                setWarmupModalColor(color);
+                setWarmupModalShow(true);
+                setWarmupModalLift(liftTitle);
+            }
+        ).catch(err => {
+            console.error(err);
+        }).finally(() => setWarmupLoadingShow(false));
+    }
 
 
     /**
@@ -81,8 +134,8 @@ function CalculatorForm() {
         return (
             <Row className="justify-content-center text-center">
                 {WeightInput(
-                    id, displayName, values.calcMethod !== calcMethod,
-                    onChange
+                    id, displayName, getLiftColor(lift), values.calcMethod !== calcMethod,
+                    onChange, onWarmupButtonClick
                 )}
             </Row>
         )
@@ -102,9 +155,9 @@ function CalculatorForm() {
             inputs.push(
                 <div className="row justify-content-center text-center" key={`${id}-row-${i}`}>
                     {WeightInput(
-                        id, displayName,
+                        id, displayName, getLiftColor(lift),
                         values.calcMethod !== CalcMethod.PERCENTAGE,
-                        onChange
+                        onChange, onWarmupButtonClick, warmupLoadingShow
                     )}
                 </div>
             )
@@ -143,6 +196,13 @@ function CalculatorForm() {
 
     return (
         <>
+            <WarmupModal
+                show={warmupModalShow}
+                onHide={() => setWarmupModalShow(false)}
+                warmupdata={warmupData}
+                warmupmodalcolor={warmupModalColor}
+                warmupmodallift={warmupModalLift}
+            />
             <form id="form" className="row mt-1" onSubmit={onSubmit}>
                 <Container fluid className="pb-1">
                     <Row className="row-cols-auto row-cols-xxl-3 row-cols-xl-2

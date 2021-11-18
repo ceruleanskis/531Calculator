@@ -61,6 +61,9 @@ interface WarmupRequest extends CalculatorRequest {
     barType: Bar;
 }
 
+/**
+ * A service to handle calls to the backend API.
+ */
 class ApiService {
     private endpoint = '/api/calculate'
 
@@ -100,6 +103,11 @@ class ApiService {
         return this.postRequest(warmupRequest);
     }
 
+    /**
+     * Gets the weight calculations from the API given form values.
+     * @param {WeightCalculationRequest} formValues
+     * @returns {Promise<any>}
+     */
     getWeightCalculations(formValues: WeightCalculationRequest) {
         return this.postRequest(formValues);
     }
