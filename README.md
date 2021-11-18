@@ -142,7 +142,7 @@ To get a local copy up and running follow these steps.
 ### Running a local dev server via `docker-compose` (recommended)
 
 `docker-compose -f docker-compose.dev.yml up`
-You should see the app at [http://loclahost:8080](http://localhost:8080).
+You should see the app at [http://localhost:8080](http://localhost:8080).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
