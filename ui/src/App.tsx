@@ -7,6 +7,10 @@ import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import {Container} from 'react-bootstrap';
 import CalculatorForm from 'components/calculator/CalculatorForm';
 
+/**
+ * Returns the Home element containing the Navbar and the CalculatorForm.
+ * @constructor
+ */
 function Home() {
     return (
         <>
@@ -18,6 +22,10 @@ function Home() {
     );
 }
 
+/**
+ * Returns the About element containing the navbar and an about section.
+ * @constructor
+ */
 function About() {
     return (
         <>
@@ -39,6 +47,10 @@ function About() {
     );
 }
 
+/**
+ * Main React application
+ * @constructor
+ */
 function App() {
     document.title = "531 Calculator"
     return (
@@ -52,7 +64,6 @@ function App() {
                 </Routes>
             </BrowserRouter>
         </>
-
     );
 }
 

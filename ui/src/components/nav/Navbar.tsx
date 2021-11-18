@@ -1,7 +1,11 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 
-
+/**
+ * A top navigation bar.
+ * @returns {JSX.Element}
+ * @constructor
+ */
 function Navbar() {
     return (
         <nav className="navbar navbar-expand-md navbar-dark bg-primary main-nav">

@@ -2,8 +2,14 @@ import {ButtonGroup} from 'react-bootstrap';
 import React, {ChangeEventHandler} from 'react';
 import {Bar, CalcMethod} from 'shared/Constants';
 
-
+/**
+ * Contains methods to create the radio buttons and their toggle groups for the calculation method and bar type toggles.
+ */
 class RadioButtonToggleGroups {
+    /**
+     * Takes a change handler function for the toggles.
+     * @param {React.ChangeEventHandler<HTMLInputElement>} onChange
+     */
     constructor(private onChange: ChangeEventHandler<HTMLInputElement>) {
     }
 
