@@ -40,3 +40,48 @@
     transform: rotate(360deg);
   }
 }
+
+button > svg {
+  pointer-events: none;
+}
+
+@mixin mobile-w-100 {
+  width: 100% !important;
+}
+
+@mixin sticky-calculate-button-row {
+  position: -webkit-sticky;
+  position: -moz-sticky;
+  position: -ms-sticky;
+  position: -o-sticky;
+  position: sticky;
+  bottom: 0;
+}
+
+.sticky-calculate-button-row {
+  //@include media-breakpoint-up(sm) {
+  //  @include sticky-calculate-button-row;
+  //}
+  @include media-breakpoint-down(xl) {
+    //border: 2px solid $primary;
+    background-color: $primary;
+    @include sticky-calculate-button-row;
+    .mobile-w-100 {
+      @include mobile-w-100;
+    }
+  }
+}
+
+.padding-tb-0-5 {
+  padding: 0.5rem 1rem;
+}
+
+#loading-modal-dialog {
+  .modal-content {
+    background-color: #22222280;
+    .spinner-border {
+      width: 15rem;
+      height: 15rem;
+    }
+  }
+}
