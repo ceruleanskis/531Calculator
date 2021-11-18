@@ -5,12 +5,14 @@ import './App.scss';
 import Navbar from './components/nav/Navbar';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import {Container} from 'react-bootstrap';
+import CalculatorForm from 'components/calculator/CalculatorForm';
 
 function Home() {
     return (
         <>
             {Navbar()}
             <Container fluid id="main">
+                {CalculatorForm()}
             </Container>
         </>
     );
