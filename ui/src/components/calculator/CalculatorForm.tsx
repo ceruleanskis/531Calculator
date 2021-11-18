@@ -1,11 +1,11 @@
 import React from 'react';
 import {Form} from 'components/calculator/Form';
-import {Container, Row} from 'react-bootstrap';
+import {Button, Col, Container, Row, Spinner} from 'react-bootstrap';
 import RadioButtonToggleGroups from 'components/calculator/RadioButtonToggleGroups';
 import {Bar, CalcMethod, Lift} from 'shared/Constants';
 import WeightInput from 'components/calculator/WeightInput';
 import WarmupModal from 'components/calculator/WarmupModal';
-import ApiService from 'services/ApiService';
+import ApiService, {WeightCalculationRequest} from 'services/ApiService';
 import {AssertionError} from 'assert';
 
 /**
@@ -26,19 +26,50 @@ function CalculatorForm() {
     }
 
     const [warmupLoadingShow, setWarmupLoadingShow] = React.useState(false);
+    const [calculateLoadingShow, setCalculateLoadingShow] = React.useState(false);
     const [warmupModalShow, setWarmupModalShow] = React.useState(false);
     const [warmupData, setWarmupData] = React.useState([]);
     const [warmupModalColor, setWarmupModalColor] = React.useState('primary');
     const [warmupModalLift, setWarmupModalLift] = React.useState(Lift.OVERHEAD_PRESS as string);
 
     const apiService = new ApiService();
+
+    /**
+     * Retrieves the calculations from the API and sets the returned values in the form.
+     * @returns {Promise<void>}
+     */
+    async function getCalculations() {
+        setCalculateLoadingShow(true);
+        apiService.getWeightCalculations(values as WeightCalculationRequest).then((response) => {
+            setCalculatedValuesInForm(response);
+        }).catch((err) => {
+            console.error(err);
+        }).finally(() => setCalculateLoadingShow(false))
+    }
+
+    /**
+     * Creates an array of form input names and values for each lift.
+     * @returns {any}
+     */
+    const ids = () => {
+        const arr: any = {}
+        for (const lift of lifts) {
+            arr[`${lift}-${CalcMethod.TMAX}`] = 80
+            arr[`${lift}-${CalcMethod.ONERM}`] = 0
+            for (const percentage of percentages) {
+                const key = `${lift}-${percentage.toString()}`;
+                arr[key] = 0
+            }
+        }
+        return arr
+    }
+
     /**
      * Sets the initial state of the form.
      * @returns {any}
      */
     const initialState: any = () => {
-        // let state = ids()
-        let state: any = {};
+        let state = ids()
         state['calcMethod'] = calcMethod
         state['barType'] = barType
         return state
@@ -48,7 +79,7 @@ function CalculatorForm() {
      * Defines the state and form handlers for the Form hook.
      */
     const {onChange, onSubmit, values} = Form(
-        ()=> {},
+        getCalculations,
         initialState
     );
     const radioButtonToggleGroups = new RadioButtonToggleGroups(onChange);
@@ -122,6 +153,18 @@ function CalculatorForm() {
         }).finally(() => setWarmupLoadingShow(false));
     }
 
+    /**
+     * Takes the values returned from calculation and sets them to the appropriate ids in the form.
+     * @param {{[p: string]: any}} values
+     */
+    function setCalculatedValuesInForm(values: { [key: string]: any }) {
+        for (let id in values) {
+            if (id in ids()) {
+                let element = document.querySelector(`#${id}`) as HTMLInputElement
+                element.value = values[id]
+            }
+        }
+    }
 
     /**
      * Returns a WeightInput for the given Lift, CalcMethod and label displayName.
@@ -194,6 +237,33 @@ function CalculatorForm() {
         return cols
     }
 
+    /**
+     * A row containing buttons for form submit and form reset.
+     * @returns {JSX.Element}
+     */
+    function submitAndResetButtonRow() {
+        return (
+            <Row className="justify-content-center text-center sticky-calculate-button-row row-full g-0">
+                <Col className="text-center justify-content-end mt-1 mb-1 g-5">
+                    <Button id="calculate" type="submit" variant="info"
+                            className="float-end mobile-w-100 border-light">
+                        <Spinner animation="border" role="status" variant="light" as="span" size="sm"
+                                 hidden={!calculateLoadingShow}>
+                            <span className="visually-hidden">Loading...</span>
+                        </Spinner>
+                        <i className="fas fa-calculator icon" hidden={calculateLoadingShow}/> Calculate
+                    </Button>
+                </Col>
+                <Col className="text-center justify-content-start mt-1 mb-1 g-5">
+                    <Button id="clear" type="reset" variant="danger"
+                            className="float-start mobile-w-100 border-light">
+                        <i className="fas fa-ban icon"/> Reset
+                    </Button>
+                </Col>
+            </Row>
+        )
+    }
+
     return (
         <>
             <WarmupModal
@@ -213,6 +283,7 @@ function CalculatorForm() {
                     </Row>
                 </Container>
                 {liftCardCols()}
+                {submitAndResetButtonRow()}
             </form>
         </>
     )
