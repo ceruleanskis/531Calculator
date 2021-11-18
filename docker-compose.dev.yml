@@ -1,0 +1,35 @@
+version: '3.8'
+
+networks:
+  531calcdev:
+
+services:
+  flask_dev:
+    networks:
+      531calcdev:
+    container_name: flask_dev
+    image: python:3
+    working_dir: /usr/src/server
+    command: /bin/bash -c "source venv/bin/activate && pip install -r requirements.txt && python -m flask run -p 7000 -h 0.0.0.0"
+    volumes:
+      - ./server:/usr/src/server
+    environment:
+      FLASK_APP: app.py
+      FLASK_ENV: development
+      FLASK_DEBUG: 1
+    ports:
+      - "7000:7000"
+  react_dev:
+    networks:
+      531calcdev:
+    container_name: react_dev
+    image: node:14.18.1
+    working_dir: /app
+    command: yarn start
+    volumes:
+      - ./ui:/app
+    environment:
+      PORT: 8080
+      HOST: 0.0.0.0
+    ports:
+      - "8080:8080"

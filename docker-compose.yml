@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  flask:
+    container_name: flask
+    build:
+      context: ./server
+    command: gunicorn -w 2 --bind 0.0.0.0:5000 app:app
+    ports:
+      - "5000:5000"
+  react_nginx:
+    container_name: react_nginx
+    build:
+      context: ./ui
+    volumes:
+      - ./ui/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "3000:3000"
