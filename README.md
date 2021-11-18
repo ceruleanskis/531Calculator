@@ -55,7 +55,7 @@
 
 ## About The Project
 
-[comment]: <> ([![Product Name Screen Shot][product-screenshot]]&#40;https://example.com&#41;)
+[![Product Name Screen Shot][preview]]()
 
 This app serves as a tool to quickly calculate percentages and warmups for your 5/3/1 workout, based off of your
 training max.
@@ -137,7 +137,7 @@ To get a local copy up and running follow these steps.
    ```sh
    python -m flask run
    ```
-7. You should see the app at [http://loclahost:3000](http://localhost:3000).
+7. You should see the app at [http://localhost:3000](http://localhost:3000).
 
 ### Running a local dev server via `docker-compose` (recommended)
 
@@ -196,6 +196,7 @@ Distributed under the GPL 3 License. See `LICENSE.txt` for more information.
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
+[preview]: preview.png
 [issues-shield]: https://img.shields.io/github/issues/ceruleanskis/531Calculator.svg?style=for-the-badge
 
 [issues-url]: https://github.com/ceruleanskis/531Calculator/issues
