@@ -7,6 +7,7 @@ import WeightInput from 'components/calculator/WeightInput';
 import WarmupModal from 'components/calculator/WarmupModal';
 import ApiService, {WeightCalculationRequest} from 'services/ApiService';
 import {AssertionError} from 'assert';
+import LocalStorageService from 'services/LocalStorageService';
 
 /**
  * A hook that contains the form inputs and logic for the calculator.
@@ -33,6 +34,24 @@ function CalculatorForm() {
     const [warmupModalLift, setWarmupModalLift] = React.useState(Lift.OVERHEAD_PRESS as string);
 
     const apiService = new ApiService();
+    const localStorageService = new LocalStorageService();
+
+    /**
+     * Loads local storage values into form on load of this hook.
+     */
+    const onLoadCalculatorForm = () => {
+        if (localStorageService.load('formData') != null) {
+            let formData: string = localStorageService.load('formData') as string;
+            try {
+                let formDataObj = JSON.parse(formData) as { [key: string]: string }
+                setCalculatedValuesInForm(formDataObj)
+            }
+            catch (err) {
+                console.error('Could not parse local storage data.');
+                localStorageService.clear();
+            }
+        }
+    }
 
     /**
      * Retrieves the calculations from the API and sets the returned values in the form.
@@ -42,6 +61,7 @@ function CalculatorForm() {
         setCalculateLoadingShow(true);
         apiService.getWeightCalculations(values as WeightCalculationRequest).then((response) => {
             setCalculatedValuesInForm(response);
+            localStorageService.save('formData', JSON.stringify(response));
         }).catch((err) => {
             console.error(err);
         }).finally(() => setCalculateLoadingShow(false))
@@ -155,13 +175,14 @@ function CalculatorForm() {
 
     /**
      * Takes the values returned from calculation and sets them to the appropriate ids in the form.
-     * @param {{[p: string]: any}} values
+     * @param {{[p: string]: any}} calculatedValues
      */
-    function setCalculatedValuesInForm(values: { [key: string]: any }) {
-        for (let id in values) {
+    function setCalculatedValuesInForm(calculatedValues: { [key: string]: any }) {
+        for (let id in calculatedValues) {
             if (id in ids()) {
                 let element = document.querySelector(`#${id}`) as HTMLInputElement
-                element.value = values[id]
+                element.value = calculatedValues[id]
+                values[id] = calculatedValues[id]
             }
         }
     }
@@ -263,6 +284,9 @@ function CalculatorForm() {
             </Row>
         )
     }
+
+    // eslint-disable-next-line
+    React.useEffect(() => onLoadCalculatorForm(), []);
 
     return (
         <>
