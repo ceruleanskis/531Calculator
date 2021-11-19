@@ -239,9 +239,10 @@ function CalculatorForm() {
         let i = 0
         for (const lift of lifts) {
             cols.push(
-                <div className="col-xxl-3 col-xl-3 col-lg-6 col-md-6 col-sm-12 mb-1">
-                    <div className={`card border-${getLiftColor(lift)}`} key={`${lift}-col-${i}`}>
-                        <div className={`card-header text-center text-white bg-${getLiftColor(lift)}`}>
+                <div className="col-xxl-3 col-xl-3 col-lg-6 col-md-6 col-sm-12 mb-1" key={`${lift}-col-${i}`}>
+                    <div className={`card border-${getLiftColor(lift)}`}>
+                        <div className={`card-header text-center text-white bg-${getLiftColor(lift)}`}
+                             key={`${lift}-card-header-${i}`}>
                             <strong>{liftFullNames[lift]}</strong></div>
                         <fieldset id={`${lift}`}>
                             <div className="card-body">
