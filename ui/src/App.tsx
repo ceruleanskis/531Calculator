@@ -6,7 +6,7 @@ import Navbar from './components/nav/Navbar';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import {Container} from 'react-bootstrap';
 import CalculatorForm from 'components/calculator/CalculatorForm';
-
+const version = require('../package.json').version;
 /**
  * Returns the Home element containing the Navbar and the CalculatorForm.
  * @constructor
@@ -37,11 +37,12 @@ function About() {
                 </p>
                 <p>
                     For questions, issues, or if you want to contribute, take a look at the <a
-                    href="https://github.com/ceruleanskis/531Calculator">Github repo</a>.
+                    href="https://github.com/ceruleanskis/531Calculator" target="_blank" rel="noreferrer">Github repo</a>.
                 </p>
                 <p>
                     Written and maintained by Cole Ward.
                 </p>
+                <p>v{version}</p>
             </Container>
         </>
     );
