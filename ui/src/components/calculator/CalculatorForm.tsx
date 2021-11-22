@@ -45,8 +45,7 @@ function CalculatorForm() {
             try {
                 let formDataObj = JSON.parse(formData) as { [key: string]: string }
                 setCalculatedValuesInForm(formDataObj)
-            }
-            catch (err) {
+            } catch (err) {
                 console.error('Could not parse local storage data.');
                 localStorageService.clear();
             }
@@ -74,7 +73,7 @@ function CalculatorForm() {
     const ids = () => {
         const arr: any = {}
         for (const lift of lifts) {
-            arr[`${lift}-${CalcMethod.TMAX}`] = 80
+            arr[`${lift}-${CalcMethod.TMAX}`] = 0
             arr[`${lift}-${CalcMethod.ONERM}`] = 0
             for (const percentage of percentages) {
                 const key = `${lift}-${percentage.toString()}`;
@@ -98,10 +97,34 @@ function CalculatorForm() {
     /**
      * Defines the state and form handlers for the Form hook.
      */
-    const {onChange, onSubmit, values} = Form(
+    let {onChange, onSubmit, values} = Form(
         getCalculations,
         initialState
     );
+
+    /**
+     * Sets the form back to its initial values and fires a
+     * change event for the radio buttons to recognize the value.
+     */
+    const onReset = () => {
+        console.log(values)
+        const radioInputIds = [
+            'btnRadioCalcMethodTrainingMax',
+            'btnRadioCalcMethodOneRepMax',
+            'btnRadioStandardBarType',
+            'btnRadioCurlBarType'
+        ]
+        values = initialState()
+        setCalculatedValuesInForm(values)
+        const event = new Event('input', {});
+        for (let id of radioInputIds) {
+            let input = document.querySelector(`#${id}`) as HTMLInputElement
+            input.dispatchEvent(event);
+        }
+        localStorageService.save('formData', JSON.stringify(values));
+        console.log(values)
+    }
+
     const radioButtonToggleGroups = new RadioButtonToggleGroups(onChange);
 
     /**
@@ -298,7 +321,7 @@ function CalculatorForm() {
                 warmupmodalcolor={warmupModalColor}
                 warmupmodallift={warmupModalLift}
             />
-            <form id="form" className="row mt-1" onSubmit={onSubmit}>
+            <form id="form" className="row mt-1" onSubmit={onSubmit} onReset={onReset}>
                 <Container fluid className="pb-1">
                     <Row className="row-cols-auto row-cols-xxl-3 row-cols-xl-2
                     row-cols-lg-2 row-cols-md-1 row-cols-sm-1 row-cols-xs-1 justify-content-center text-center">
