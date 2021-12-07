@@ -2,6 +2,10 @@
 @import "~bootstrap/scss/bootstrap";
 @import "~bootswatch/dist/minty/bootswatch";
 
+* {
+  -webkit-overflow-scrolling: touch;
+}
+
 .App {
   text-align: center;
 }
@@ -49,23 +53,9 @@ button > svg {
   width: 100% !important;
 }
 
-@mixin sticky-calculate-button-row {
-  position: -webkit-sticky;
-  position: -moz-sticky;
-  position: -ms-sticky;
-  position: -o-sticky;
-  position: sticky;
-  bottom: 0;
-}
-
-.sticky-calculate-button-row {
-  //@include media-breakpoint-up(sm) {
-  //  @include sticky-calculate-button-row;
-  //}
+.calculate-button-row {
   @include media-breakpoint-down(xl) {
-    //border: 2px solid $primary;
     background-color: $primary;
-    @include sticky-calculate-button-row;
     .mobile-w-100 {
       @include mobile-w-100;
     }
@@ -83,5 +73,25 @@ button > svg {
       width: 15rem;
       height: 15rem;
     }
+  }
+}
+
+.fixed-right {
+  left: unset;
+  right: 0;
+}
+
+.btn-circle.btn-xl {
+  width: 50px;
+  height: 50px;
+  padding: 8px 12px;
+  border-radius: 25px;
+  font-size: 24px;
+  line-height: 1.33;
+}
+
+.display-mobile {
+  @include media-breakpoint-up(xl) {
+    display: none;
   }
 }

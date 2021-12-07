@@ -32,6 +32,7 @@ function CalculatorForm() {
     const [warmupData, setWarmupData] = React.useState([]);
     const [warmupModalColor, setWarmupModalColor] = React.useState('primary');
     const [warmupModalLift, setWarmupModalLift] = React.useState(Lift.OVERHEAD_PRESS as string);
+    const [scrollButtonVisible, setScrollButtonVisible] = React.useState(true)
 
     const apiService = new ApiService();
     const localStorageService = new LocalStorageService();
@@ -288,7 +289,7 @@ function CalculatorForm() {
      */
     function submitAndResetButtonRow() {
         return (
-            <Row className="justify-content-center text-center sticky-calculate-button-row row-full g-0">
+            <Row className="justify-content-center text-center row-full g-0 calculate-button-row">
                 <Col className="text-center justify-content-end mt-1 mb-1 g-5">
                     <Button id="calculate" type="submit" variant="info"
                             className="float-end mobile-w-100 border-light">
@@ -309,8 +310,33 @@ function CalculatorForm() {
         )
     }
 
+    /**
+     * Toggles the visibility of the scroll button.
+     */
+    const toggleVisibility = () => {
+        if (window.innerHeight + window.pageYOffset >= document.body.offsetHeight) {
+            setScrollButtonVisible(false)
+        } else {
+            setScrollButtonVisible(true)
+        }
+    }
+
+    /**
+     * Scrolls the window to the bottom of the page.
+     */
+    const scroll = () => {
+        window.scrollTo({left: 0, top: document.body.scrollHeight, behavior: "smooth"});
+    }
+
     // eslint-disable-next-line
     React.useEffect(() => onLoadCalculatorForm(), []);
+    React.useEffect(() => {
+        // eslint-disable-next-line
+        // @ts-ignore
+        document.addEventListener("scroll", function (e) {
+            toggleVisibility()
+        }, undefined)
+    })
 
     return (
         <>
@@ -332,6 +358,11 @@ function CalculatorForm() {
                 </Container>
                 {liftCardCols()}
                 {submitAndResetButtonRow()}
+                <Button className="btn-circle btn-xl fixed-bottom fixed-right mb-2 mx-2 display-mobile"
+                        hidden={!scrollButtonVisible}
+                        onClick={() => scroll()}>
+                    <i className="fas fa-chevron-down icon"/>
+                </Button>
             </form>
         </>
     )
