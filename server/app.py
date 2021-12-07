@@ -4,7 +4,7 @@ from routes import calculate as calculator
 
 app = Flask(__name__)
 
-version = "0.1.4"
+version = "0.1.5"
 
 
 # TODO: Split this route into two; POST /api/calculate and GET /api/warmup
