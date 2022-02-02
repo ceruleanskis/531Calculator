@@ -8,7 +8,7 @@ services:
     networks:
       531calcdev:
     container_name: flask_dev
-    image: python:3
+    image: python:3.9-buster
     working_dir: /usr/src/server
     command: /bin/bash -c "source venv/bin/activate && pip install -r requirements.txt && python -m flask run -p 7000 -h 0.0.0.0"
     volumes:
