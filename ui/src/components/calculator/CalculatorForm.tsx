@@ -108,7 +108,6 @@ function CalculatorForm() {
      * change event for the radio buttons to recognize the value.
      */
     const onReset = () => {
-        console.log(values)
         const radioInputIds = [
             'btnRadioCalcMethodTrainingMax',
             'btnRadioCalcMethodOneRepMax',
