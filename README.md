@@ -126,18 +126,16 @@ To get a local copy up and running follow these steps.
 ### Running a local development server
 
 1. Navigate to the `ui` directory.
-2. Modify the proxy configuration in the `package.json` file:
-3. `"proxy": "http://localhost:5000"`
-4. Serve the React app:
+2. Serve the React app:
    ```sh
    yarn start
    ```
-5. Navigate to the `server` directory.
-6. Serve the Flask app:
+3. Navigate to the `server` directory.
+4. Serve the Flask app:
    ```sh
-   python -m flask run
+   flask run
    ```
-7. You should see the app at [http://localhost:3000](http://localhost:3000).
+5. You should see the app at [http://localhost:3000](http://localhost:3000).
 
 ### Running a local dev server via `docker-compose` (recommended)
 
