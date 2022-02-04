@@ -5,6 +5,7 @@ networks:
 
 services:
   flask_dev:
+    restart: always
     networks:
       531calcdev:
     container_name: flask_dev
@@ -20,6 +21,7 @@ services:
     ports:
       - "7000:7000"
   react_dev:
+    restart: always
     networks:
       531calcdev:
     container_name: react_dev

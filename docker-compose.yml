@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   flask:
+    restart: always
     container_name: flask
     build:
       context: ./server
@@ -9,6 +10,7 @@ services:
     ports:
       - "5000:5000"
   react_nginx:
+    restart: always
     container_name: react_nginx
     build:
       context: ./ui
