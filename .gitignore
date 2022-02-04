@@ -20,7 +20,7 @@ yarn-error.log*
 instance/*
 !instance/.gitignore
 .webassets-cache
-.env
+server/.env
 
 ### Flask.Python Stack ###
 # Byte-compiled / optimized / DLL files
@@ -148,3 +148,5 @@ dmypy.json
 cython_debug/
 
 # End of https://www.toptal.com/developers/gitignore/api/flask
+
+ui/.env.local

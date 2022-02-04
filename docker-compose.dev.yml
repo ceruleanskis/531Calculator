@@ -23,11 +23,12 @@ services:
     networks:
       531calcdev:
     container_name: react_dev
-    image: node:14.18.1
+    image: node:17.4.0
     working_dir: /app
     command: yarn start
     volumes:
       - ./ui:/app
+      - ./ui/.env.dev-docker:/app/.env.local
     environment:
       PORT: 8080
       HOST: 0.0.0.0
