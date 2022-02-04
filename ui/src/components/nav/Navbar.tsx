@@ -22,7 +22,6 @@ function Navbar() {
                 <span className="navbar-brand order-first order-md-0 mx-0">
                     <i className="fas fa-dumbbell"/> 531 Calculator <i className="fas fa-dumbbell"/></span>
                 </Link>
-                <h1 style={{"color": "pink"}}>{process.env.REACT_APP_ENV}</h1>
                 <div className="collapse navbar-collapse w-100 justify-content-end">
                     <ul className="nav navbar-nav ml-auto">
                         <li className="nav-item text-primary">
