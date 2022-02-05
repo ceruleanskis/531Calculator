@@ -1,4 +1,5 @@
 import json
+from flask import jsonify, Response
 
 args = None
 
@@ -16,18 +17,25 @@ bar_lower_limit_curl = 20.0
 bar_lower_limit_standard = 45.0
 
 
-def calculate(values):
+def calculate(values) -> Response:
+    '''Calculates based on calcMethod value.
+
+    :param values: JSON request values
+    :type values: dict
+    :return: JSON representation of calculated values
+    :rtype: Response
+    '''
     if values['calcMethod'] == 'tmax':
-        calculated_percentages = calculate_percentages(values)
-        return json.dumps(calculated_percentages)
+        return calculate_percentages(values)
     elif values['calcMethod'] == '1rm':
-        calculated_percentages = calculate_maxes(values)
-        return json.dumps(calculated_percentages)
-    elif values['calcMethod'] == 'warmup':
-        return json.dumps(calculate_warmups(values['startingSet'], values['barType']))
+        return calculate_maxes(values)
+    else:
+        # throw error
+        pass
 
 
-def calculate_warmups(starting_set, bar_type):
+def calculate_warmups(values) -> Response:
+    starting_set, bar_type = values['startingSet'], values['barType']
     if not starting_set:
         starting_set = 0.0
     else:
@@ -66,13 +74,13 @@ def calculate_warmups(starting_set, bar_type):
 
     for workout in workouts:
         multiplier = float(workout['multiplier'])
-        weight = myround(starting_set * multiplier)
+        weight = weight_round(starting_set * multiplier)
         if weight < bar_lower_limit:
             weight = bar_lower_limit
 
         response.append(f"{workout['sets']} x {workout['reps']} @ {weight}")
 
-    return {"message": response}
+    return jsonify(message=response)
 
 
 def calculate_percentages(values):
@@ -92,10 +100,10 @@ def calculate_percentages(values):
         for percentage in percentages:
             form_id = f'{lift}-{percentage}'
             percent_float = percentage / 100
-            calculated_weight = myround(training_max * percent_float)
+            calculated_weight = weight_round(training_max * percent_float)
             response[form_id] = calculated_weight
 
-    return response
+    return jsonify(message=response)
 
 
 def calculate_maxes(values):
@@ -115,28 +123,45 @@ def calculate_maxes(values):
         for percentage in percentages:
             form_id = f'{lift}-{percentage}'
             percent_float = percentage / 100
-            calculated_weight = myround(training_max * percent_float)
+            calculated_weight = weight_round(training_max * percent_float)
             response[form_id] = calculated_weight
 
-    return response
+    return jsonify(message=response)
 
 
 def calculate_training_max(weight: float, training_max_percent: float = 0.9):
     training_max = training_max_percent * weight
-    return myround(training_max)
+    return weight_round(training_max)
 
 
 def calculate_onerm_from_tmax(training_max: float, training_max_percent: float = 0.9):
     onerm = training_max / training_max_percent
-    return myround(onerm)
+    return weight_round(onerm)
 
 
-def calculate_onerm(weight: float, reps: int):
-    # epley formula
+def calculate_onerm(weight: float, reps: int) -> float:
+    '''Calculates one rep maxes based on the Epley Formula 
+    https://en.wikipedia.org/wiki/One-repetition_maximum#Epley_formula
 
+    :param weight: The weight in lbs
+    :type weight: float
+    :param reps: The number of repetitions for the weight
+    :type reps: int
+    :return: The calculated 1RM
+    :rtype: float
+    '''
     onerm = (weight * reps * 0.0333) + weight
-    return myround(onerm)
+    return weight_round(onerm)
 
 
-def myround(x, base=2.5):
+def weight_round(x: float, base=2.5) -> float:
+    '''Rounds numbers to the nearest base.
+
+    :param x: Number to be rounded
+    :type x: float
+    :param base: what step to round to, defaults to 2.5
+    :type base: float, optional
+    :return: The number rounded to nearest base
+    :rtype: float
+    '''
     return base * round(x / base)
