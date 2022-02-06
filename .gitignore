@@ -150,4 +150,5 @@ cython_debug/
 # End of https://www.toptal.com/developers/gitignore/api/flask
 
 ui/.env.local
-.vscode/settings.json
+.vscode
+.idea
