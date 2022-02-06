@@ -121,7 +121,7 @@ function CalculatorForm() {
             let input = document.querySelector(`#${id}`) as HTMLInputElement
             input.dispatchEvent(event);
         }
-        localStorageService.save('formData', JSON.stringify(values));
+        localStorageService.clear()
         console.log(values)
     }
 
