@@ -1,0 +1,48 @@
+{
+    "test_warmup_lower_bound": [
+        {
+            "request": {
+                "calcMethod": "warmup",
+                "barType": "standard",
+                "startingSet": 30
+            },
+            "expected_response": [
+                "2 x 5 @ 45.0",
+                "1 x 5 @ 45.0",
+                "1 x 3 @ 45.0",
+                "1 x 2 @ 45.0"
+            ],
+            "expected_status_code": 200
+        },
+        {
+            "request": {
+                "calcMethod": "warmup",
+                "barType": "curl",
+                "startingSet": 30
+            },
+            "expected_response": [
+                "2 x 5 @ 20.0",
+                "1 x 5 @ 20.0",
+                "1 x 3 @ 20.0",
+                "1 x 2 @ 22.5"
+            ],
+            "expected_status_code": 200
+        }
+    ],
+    "test_warmup_calculation": [
+        {
+            "request": {
+                "calcMethod": "warmup",
+                "barType": "standard",
+                "startingSet": 250
+            },
+            "expected_response": [
+                "2 x 5 @ 62.5",
+                "1 x 5 @ 105.0",
+                "1 x 3 @ 145.0",
+                "1 x 2 @ 187.5"
+            ],
+            "expected_status_code": 200
+        }
+    ]
+}

@@ -1,37 +1,48 @@
-from app import app
+# pylint: skip-file
+
+from .data_handler import inject_test_data
+from fivethreeonecalc.app import create_app
 from flask import testing
+from typing import Union, NamedTuple
 import pytest
+import json
 
 
-@pytest.fixture(name='client')
-def fixture_client() -> testing.FlaskClient:
-    '''
-    Configures a client for testing.
-    :return: A client for sending requests
-    :rtype: testing.FlaskClient
-    '''
-    return app.test_client()
+class TestCalculator:
 
+    WARMUP_TEST_DATA = inject_test_data(file_path='warmup_tests.json')
 
-def test_warmup_lower_bound(client):
-    ''' Warmups should have lower bound on bar type weight '''
-    endpoint = '/api/warmup'
+    @pytest.fixture(name='client')
+    def fixture_client(self) -> testing.FlaskClient:
+        '''
+        Configures a client for testing.
+        :return: A client for sending requests
+        :rtype: testing.FlaskClient
+        '''
+        return create_app().test_client()
 
-    data = {'calcMethod': 'warmup', 'barType': 'standard', 'startingSet': 30}
-    res = client.post(endpoint, json=data)
-    json_data = res.get_json()
-    assert res.status_code == 200
-    assert json_data['message'] == ['2 x 5 @ 45.0',
-                                    '1 x 5 @ 45.0',
-                                    '1 x 3 @ 45.0',
-                                    '1 x 2 @ 45.0']
+    @pytest.mark.parametrize('input', WARMUP_TEST_DATA.test_warmup_lower_bound)
+    def test_warmup_lower_bound(self, client, input: NamedTuple):
+        ''' Warmups should have lower bound on bar type weight '''
+        endpoint = '/api/warmup'
+        res = client.post(endpoint, json=input.request._asdict())
+        json_data = res.get_json()
+        assert res.status_code == input.expected_status_code
+        assert json_data['message'] == input.expected_response
 
-    data = {'calcMethod': 'warmup', 'barType': 'curl', 'startingSet': 30}
-    res = client.post(endpoint, json=data)
-    json_data = res.get_json()
-    assert res.status_code == 200
-    assert json_data['message'] == ['2 x 5 @ 20.0',
-                                    '1 x 5 @ 20.0',
-                                    '1 x 3 @ 20.0',
-                                    '1 x 2 @ 22.5']
-    return app.test_client()
+    @pytest.mark.parametrize('input', WARMUP_TEST_DATA.test_warmup_calculation)
+    def test_warmup_calculation(self, client, input: NamedTuple):
+        '''
+        Warmups should calculate as follows (w is weight):
+            [
+                "2 x 5 @ 0.25 * w",
+                "1 x 5 @ 0.42 * w",
+                "1 x 3 @ 0.58 * w",
+                "1 x 2 @ 0.75 * w"
+            ]
+        '''
+        endpoint = '/api/warmup'
+        res = client.post(endpoint, json=input.request._asdict())
+        json_data = res.get_json()
+        assert res.status_code == input.expected_status_code
+        assert json_data['message'] == input.expected_response
