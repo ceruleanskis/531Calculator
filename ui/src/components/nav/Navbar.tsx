@@ -1,5 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
+import './Navbar.scss'
 
 /**
  * A top navigation bar.
@@ -19,7 +20,7 @@ function Navbar() {
                 <div className="collapse navbar-collapse w-100">
                 </div>
                 <Link to="/">
-                <span className="navbar-brand order-first order-md-0 mx-0">
+                <span className="navbar-brand title-text order-first order-md-0 mx-0">
                     <i className="fas fa-dumbbell"/> 531 Calculator <i className="fas fa-dumbbell"/></span>
                 </Link>
                 <div className="collapse navbar-collapse w-100 justify-content-end">
