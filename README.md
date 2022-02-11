@@ -7,7 +7,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/ceruleanskis/531Calculator">
-    <img src="ui/public/android-chrome-192x192.png" alt="Logo" width="80" height="80">
+    <img src="ui/public/icons/192x192-icon.png" alt="Logo" width="80" height="80">
   </a>
 
 <h3 align="center">531 Calculator</h3>

@@ -65,19 +65,17 @@ interface WarmupRequest extends CalculatorRequest {
  * A service to handle calls to the backend API.
  */
 class ApiService {
-    private endpoint = '/api/calculate'
-
     /**
      * POST request to the api endpoint
      * @param body a CalculatorRequest
      */
-    async postRequest(body: CalculatorRequest) {
+    async postRequest(body: CalculatorRequest, endpoint: string) {
         const init: RequestInit = {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(body)
         }
-        return fetch(this.endpoint, init)
+        return fetch(endpoint, init)
             .then((response) => {
                 let responseJson = response.json();
                 return Promise.resolve(responseJson);
@@ -94,13 +92,14 @@ class ApiService {
      * @param barType
      */
     async getWarmup(startingSet: number, barType: Bar) {
+        const endpoint = '/api/warmup'
         const warmupRequest: WarmupRequest = {
             startingSet: startingSet,
             calcMethod: CalcMethod.WARMUP,
             barType: barType
         }
 
-        return this.postRequest(warmupRequest);
+        return this.postRequest(warmupRequest, endpoint);
     }
 
     /**
@@ -109,7 +108,8 @@ class ApiService {
      * @returns {Promise<any>}
      */
     getWeightCalculations(formValues: WeightCalculationRequest) {
-        return this.postRequest(formValues);
+        const endpoint = '/api/calculate'
+        return this.postRequest(formValues, endpoint);
     }
 }
 

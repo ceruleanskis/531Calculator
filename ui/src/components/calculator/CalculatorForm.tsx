@@ -60,8 +60,8 @@ function CalculatorForm() {
     async function getCalculations() {
         setCalculateLoadingShow(true);
         apiService.getWeightCalculations(values as WeightCalculationRequest).then((response) => {
-            setCalculatedValuesInForm(response);
-            localStorageService.save('formData', JSON.stringify(response));
+            setCalculatedValuesInForm(response.message);
+            localStorageService.save('formData', JSON.stringify(response.message));
         }).catch((err) => {
             console.error(err);
         }).finally(() => setCalculateLoadingShow(false))
@@ -108,7 +108,6 @@ function CalculatorForm() {
      * change event for the radio buttons to recognize the value.
      */
     const onReset = () => {
-        console.log(values)
         const radioInputIds = [
             'btnRadioCalcMethodTrainingMax',
             'btnRadioCalcMethodOneRepMax',
@@ -122,7 +121,7 @@ function CalculatorForm() {
             let input = document.querySelector(`#${id}`) as HTMLInputElement
             input.dispatchEvent(event);
         }
-        localStorageService.save('formData', JSON.stringify(values));
+        localStorageService.clear()
         console.log(values)
     }
 
