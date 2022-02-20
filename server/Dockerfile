@@ -11,4 +11,4 @@ WORKDIR /usr/src/server
 COPY --from=build-stage /build/dist/*.whl .
 RUN pip install --find-links=/usr/src/server fivethreeonecalc
 RUN pip install gunicorn
-CMD gunicorn -w 2 --bind 0.0.0.0:5000 fivethreeonecalc:create_app
+CMD gunicorn -w 2 --bind 0.0.0.0:5000 "fivethreeonecalc:create_app()"
