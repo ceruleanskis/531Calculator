@@ -112,8 +112,7 @@ To get a local copy up and running follow these steps.
     ```sh
     python -m venv venv
     source venv/bin/activate
-    pip install --upgrade pip
-    pip install --no-cache-dir -r requirements.txt
+    pip install -e .
     ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -134,11 +133,11 @@ To get a local copy up and running follow these steps.
 3. Navigate to the `server` directory.
 4. Serve the Flask app:
    ```sh
-   flask run
+   FLASK_APP=fivethreeonecalc FLASK_ENV=development flask run
    ```
 5. You should see the app at [http://localhost:3000](http://localhost:3000).
 
-### Running a local dev server via `docker-compose` (recommended)
+### Running a local dev server via `docker-compose`
 
 `docker-compose -f docker-compose.dev.yml up`
 You should see the app at [http://localhost:8080](http://localhost:8080).
