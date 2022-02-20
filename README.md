@@ -42,6 +42,7 @@
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
+    <li><a href="#testing">Testing</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
@@ -144,6 +145,22 @@ You should see the app at [http://localhost:8080](http://localhost:8080).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
+
+## Testing
+
+To run the frontend tests:
+
+Navigate to the `ui` directory and run:
+```
+yarn run test
+```
+
+To run the backend tests:
+
+Navigate to the `server` directory and run:
+```
+pytest
+```
 
 
 <!-- ROADMAP -->
