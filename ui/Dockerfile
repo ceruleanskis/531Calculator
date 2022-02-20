@@ -7,6 +7,7 @@ COPY public ./public/
 COPY src ./src/
 COPY .env.docker .env.local
 RUN yarn install && yarn build
+
 FROM nginx:alpine
 WORKDIR /usr/share/nginx/html
 COPY --from=build-stage app/build/ .

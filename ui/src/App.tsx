@@ -49,6 +49,7 @@ function About() {
                     Written and maintained by Cole Ward.
                 </p>
                 <p>v{version}</p>
+                <p>See release notes for the latest version <a href="https://github.com/ceruleanskis/531Calculator/releases/latest" target="_blank" rel="noreferrer">here.</a></p>
             </Container>
         </>
     );
